@@ -13,11 +13,13 @@ public interface UserService {
 	
 	public User findUserByEmail(String email);
 	public User findByCustUUID(String custUUID);
-	public User findById(long id);
+	public User findById(Long id);
 	
 	public User save(User user);
 	public User update(User user);
+	public boolean isUserExist(User user);
 	
-	public void delete(long id);
+	public void delete(Long id);
+
 
 }

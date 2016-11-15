@@ -1,5 +1,6 @@
 package com.portalizer.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,13 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="address")
 public class Address {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private Long id;
 	
 	@Column(name="street_name")
 	private String streetName;
@@ -39,7 +40,7 @@ public class Address {
 	public Address() {
 		super();
 	}
-	public Address(long id, String streetName, String city, String postalCode, String country, String areaCode,
+	public Address(Long id, String streetName, String city, String postalCode, String country, String areaCode,
 			String phoneNumber) {
 		super();
 		this.id = id;
@@ -52,11 +53,11 @@ public class Address {
 	}
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	public long getId() {
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getStreetName() {
@@ -96,7 +97,8 @@ public class Address {
 		this.phoneNumber = phoneNumber;
 	}
 	
-	@OneToOne(mappedBy = "address")
+	@JsonBackReference
+	@OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
 	public User getUser(){
 		return user;
 	}

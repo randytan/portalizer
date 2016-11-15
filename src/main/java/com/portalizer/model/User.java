@@ -1,5 +1,7 @@
 package com.portalizer.model;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,16 +9,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Table(name="users")
 @Entity
 public class User {
 	
-	private long id;
+	private Long id;
 	
 	@Column(name="first_name")
 	private String firstName;
@@ -35,13 +39,15 @@ public class User {
 	
 	private Address address;
 	
+	private Set<Role> roles;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -101,15 +107,27 @@ public class User {
 		this.gender = gender;
 	}
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@JsonManagedReference
+	@OneToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_addressid")
-	@JsonIgnore
 	public Address getAddress() {
 		return address;
 	}
 
 	public void setAddress(Address address) {
 		this.address = address;
+	}
+	
+	/* authentication functionality */
+	
+	@ManyToMany
+	@JoinTable(name = "users_has_role", joinColumns = @JoinColumn(name= "users_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 	
 }
